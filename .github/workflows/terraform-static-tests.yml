@@ -5,7 +5,7 @@ on:
 
 defaults:
   run:
-    working-directory: ./infra/tf-app
+    working-directory: terraform/environments/dev
 
 permissions:
   actions: read
@@ -18,27 +18,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
+    - name: Checkout Repository
       uses: actions/checkout@v4
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
-    - name: Terraform Init (Upgrade)
-      run: terraform init -backend=false -upgrade
+    - name: Terraform Init (no backend)
+      run: terraform init -backend=false
 
     - name: Terraform Validate
       run: terraform validate
 
-    - name: Terraform Format
+    - name: Terraform Format Check
       run: terraform fmt -check -recursive
 
-    - name: tfsec
+    - name: tfsec Scan
       uses: tfsec/tfsec-sarif-action@master
       with:
-        sarif_file: tfsec.sarif         
+        sarif_file: tfsec.sarif
 
-    - name: Upload SARIF file
+    - name: Upload SARIF File
       uses: github/codeql-action/upload-sarif@v3
       with:
         sarif_file: tfsec.sarif
