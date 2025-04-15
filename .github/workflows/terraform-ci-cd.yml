@@ -17,8 +17,8 @@ env:
   ARM_ACCESS_KEY: "${{ secrets.ARM_ACCESS_KEY }}"
 
 defaults:
-  run:
-    working-directory: ./infra/tf-app  
+  run: 
+    working-directory: ./terraform/environments/dev  
   
 jobs:
   tflint:
@@ -68,6 +68,13 @@ jobs:
       with:
         terraform_wrapper: false
 
+    - name: Azure Login (OIDC)
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Terraform Init
       run: terraform init
 
@@ -91,7 +98,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: tfplan
-        path: infra/tf-app/tfplan
+        path: terraform/environments/dev
 
     - name: Create String Output
       id: tf-plan-string
@@ -129,6 +136,7 @@ jobs:
               repo: context.repo.repo,
               body: body
           })
+
   terraform-apply:
     name: 'Terraform Apply'
     if: github.ref == 'refs/heads/main' && needs.terraform-plan.outputs.tfplanExitCode == 2
@@ -140,6 +148,13 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Azure Login (OIDC)
+      uses: azure/login@v1
+      with:
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
@@ -150,8 +165,8 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: tfplan
-        path: infra/tf-app
+        path: terraform/environments/dev
 
     - name: Terraform Apply
       run: terraform apply -auto-approve tfplan
-      working-directory: ./infra/tf-app
+      working-directory: ./terraform/environments/dev
