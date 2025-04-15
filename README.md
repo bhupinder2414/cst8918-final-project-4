@@ -52,7 +52,7 @@ cst8918-final-project/
 └── main.tf                           # Root Terraform entry point
 ```
 ## Project Architecture
-![Project Architecture](Project.png)
+![Project Architecture](project.png)
 
 ## Prerequisites
 - Azure account with sufficient permissions
