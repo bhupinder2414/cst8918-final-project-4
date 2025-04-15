@@ -1,0 +1,49 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.env
+.env.*
+
+# Remix build artifacts
+public/build/
+build/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# Mac system files
+.DS_Store
+
+# Terraform
+*.tfstate
+*.tfstate.*
+.crash
+.terraform/
+terraform.tfvars
+override.tf
+override.tf.json
+terraform.tfvars.json
+*.backup
+*.log
+
+# Redis CLI auth history (if any)
+.rediscli_history
+
+# Linux and WSL artifacts
+*.swp
+*~
+.cache/
+coverage/
+
+# Docker
+*.tar
+.dockerignore
+docker-compose.override.yml
+
+# GitHub actions temp files
+.github/workflows/*.bak
